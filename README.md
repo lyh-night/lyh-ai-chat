@@ -3,12 +3,8 @@
 一个基于 Vue3 的 ai 对话界面，支持多轮对话、代码高亮、复制、思考过程折叠等功能。
 
 
-
-
 ## 技术栈
-Vue 3 + Vite + vue-router + arkdown-it + highlight.js + @microsoft/fetch-event-source
-
-
+Vue 3 + Vite + vue-router + markdown-it + highlight.js + @microsoft/fetch-event-source
 
 ## 快速开始
 
@@ -32,20 +28,20 @@ npm run build
 
 ## 项目结构
 
-```json
+```txt
 lyh-ai-chat
 ├── public
 ├── src
-│   ├── api // API请求
-│   ├── assets // 静态资源文件
-│   ├── components // 全局组件
-│   ├── router // 路由
-│   ├── stores // 状态管理
-│   ├── styles // 全局样式
-│   ├── utils // 工具类函数
-│   └── views // 页面视图
-│   └── App.vue // 入口文件
-│   └── mian.js // 项目入口
+│   ├── api # API请求
+│   ├── assets # 静态资源文件
+│   ├── components # 全局组件
+│   ├── router # 路由
+│   ├── stores # 状态管理
+│   ├── styles # 全局样式
+│   ├── utils # 工具类函数
+│   └── views # 页面视图
+│   └── App.vue # 入口文件
+│   └── mian.js # 项目入口
 ├── .editorconfig
 ├── .env.development
 ├── .env.production
@@ -61,9 +57,6 @@ lyh-ai-chat
 ├── README.md
 └── vite.config.js
 ```
-
-
-
 
 ## License
 
