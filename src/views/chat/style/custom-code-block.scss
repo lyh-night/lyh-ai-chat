@@ -1,0 +1,42 @@
+// 定义自定义代码块的样式
+
+// md文档中 代码块顶部显示 语言类型 和 复制按钮的样式
+.code-block {
+  &-wrapper {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #d7d7d7;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0px;
+    padding: 0px;
+  }
+
+  &-header {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #b3b3b3;
+    background-color: #f0f0f0;
+
+    &__copy {
+      cursor: pointer;
+      user-select: none;
+      .icon-fuzhi {
+        vertical-align: bottom;
+      }
+
+      &:hover {
+        color: #65a665;
+      }
+    }
+  }
+  &-body {
+    padding: 10px;
+    box-sizing: border-box;
+  }
+}
