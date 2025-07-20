@@ -58,7 +58,7 @@ async function createDialogue(message) {
       if (res.ok && res.headers.get('content-type') === 'text/event-stream') {
         console.log('✔️ 连接成功')
       } else {
-        updateChatEndContent({ key: 'status', vlaue: 'error' })
+        updateChatEndContent({ key: 'status', value: 'error' })
         throw new Error('❌ 连接失败')
       }
     },
@@ -66,11 +66,11 @@ async function createDialogue(message) {
     onmessage(event) {
       console.log('📥 收到消息:', event.data)
       if (event.data == '[DONE]') {
-        updateChatEndContent({ key: 'status', vlaue: 'finish' })
+        updateChatEndContent({ key: 'status', value: 'finish' })
         state.loading = false
         return
       }
-      updateChatEndContent({ key: 'status', vlaue: 'response' })
+      updateChatEndContent({ key: 'status', value: 'response' })
       const content = JSON.parse(event.data)
       if (content) {
         // content中包含 <think> 时开始思考，包含 </think> 时停止思考
@@ -94,14 +94,14 @@ async function createDialogue(message) {
 
     onclose() {
       console.log('🔌 连接关闭')
-      updateChatEndContent({ key: 'status', vlaue: 'close' })
+      updateChatEndContent({ key: 'status', value: 'close' })
       state.loading = false
     },
 
     onerror(err) {
       console.error('🔥 连接出错:', err)
       state.loading = false
-      updateChatEndContent({ key: 'status', vlaue: 'error' })
+      updateChatEndContent({ key: 'status', value: 'error' })
       throw err
     }
   })
