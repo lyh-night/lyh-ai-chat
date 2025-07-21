@@ -92,5 +92,12 @@ export default defineConfig({
     drop: ['console', 'debugger']
   },
   // CSS 预处理器
-  css: {}
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+        javascriptEnabled: true
+      }
+    }
+  }
 })
