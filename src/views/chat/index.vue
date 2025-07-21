@@ -117,18 +117,18 @@ function stopChat() {
   state.loading = false
 }
 
-function changeChat(val) {
-  if (val) {
-    getChatDetail()
+function changeChat(id) {
+  if (id) {
+    getChatDetail(id)
   } else {
     state.contentList = []
   }
 }
 
-function getChatDetail() {
-  chatApi.getChatDetail({}).then((res) => {
+function getChatDetail(id) {
+  chatApi.getChatDetail({ id }).then((res) => {
     if (res.code == 0) {
-      const chat_messages = res.data.biz_data.chat_messages
+      const chat_messages = res.data || []
       state.contentList = chat_messages.map((item) => {
         if (item.role == 'USER') {
           return {
