@@ -25,5 +25,5 @@ export function handleChatMessage(aiText) {
 }
 
 export function handleThinkMessage(val) {
-  return val.replaceAll('\n', '<div style="height: 6px"></div>')
+  return val.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<div style="height: 6px"></div>')
 }
