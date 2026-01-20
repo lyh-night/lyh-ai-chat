@@ -26,6 +26,7 @@
 
 <script setup>
 import chatApi from '@/api/model/chat.js'
+import { formatTime } from '@/utils/time.js'
 
 const state = reactive({
   activeId: '',
@@ -56,43 +57,38 @@ onMounted(() => {
   getHsitoryList()
 })
 
-const historyKeyObj = {
-  today: '今天',
-  yesterday: '昨天',
-  beforeYesterday: '其它时间'
+function getChatClassify(time) {
+  const cur_time = Math.floor(new Date().getTime() / 1000)
+  if (cur_time - time < 24 * 60 * 60) {
+    return { label: '今天', value: 'today' }
+  } else if (cur_time - time < 2 * 24 * 60 * 60) {
+    return { label: '昨天', value: 'yesterday' }
+  } else if (cur_time - time < 7 * 24 * 60 * 60) {
+    return { label: '7天内', value: 'with7' }
+  } else if (cur_time - time < 30 * 24 * 60 * 60) {
+    return { label: '30天内', value: 'with30' }
+  } else {
+    return { label: formatTime(time * 1000, 'YYYY-MM'), value: formatTime(time * 1000, 'YYYY-MM') }
+  }
 }
 
 function getHsitoryList() {
   chatApi.getChatList().then((res) => {
     if (res.code === 0) {
       const list = res.data || []
-      const cur_time = new Date().getTime()
-
-      const classifyDate = (data, cur_time) => {
-        const classifyData = {
-          today: [],
-          yesterday: [],
-          beforeYesterday: []
-        }
-        data.forEach((item) => {
-          const updated_time = new Date(item.updated_at * 1000).getTime()
-          if (cur_time - updated_time > 2 * 24 * 60 * 60 * 1000) {
-            classifyData.beforeYesterday.push(item)
-          } else if (cur_time - updated_time > 1 * 24 * 60 * 60 * 1000) {
-            classifyData.yesterday.push(item)
-          } else {
-            classifyData.today.push(item)
-          }
-        })
-        const results = []
-        for (let item in classifyData) {
-          if (classifyData[item].length > 0) {
-            results.push({ label: historyKeyObj[item], key: item, children: classifyData[item] })
+      const classifyData = {}
+      list.forEach((item) => {
+        const { label, value } = getChatClassify(item.updated_at)
+        if (!classifyData[value]) {
+          classifyData[value] = {
+            label: label,
+            value: value,
+            children: []
           }
         }
-        return results
-      }
-      state.chatHistoryList = classifyDate(list, cur_time)
+        classifyData[value].children.push(item)
+      })
+      state.chatHistoryList = Object.values(classifyData)
     }
   })
 }
