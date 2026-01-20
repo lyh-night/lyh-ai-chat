@@ -1,5 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
 import path from 'path'
+import tailwindcss from '@tailwindcss/vite'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -46,7 +47,8 @@ export default defineConfig({
       iconDirs: [path.resolve(process.cwd(), 'src/assets/svg')],
       symbolId: 'icon-[dir]-[name]'
     }),
-    vueSetupExtend()
+    vueSetupExtend(),
+    tailwindcss()
   ],
   // 打包相关配置
   build: {
