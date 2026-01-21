@@ -20,6 +20,7 @@
     "github-markdown-css": "^5.8.1",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
+    "mermaid": "^11.12.2",
     "pinia": "^2.1.7",
     "tailwindcss": "^4.1.18",
     "vue": "^3.4.21",

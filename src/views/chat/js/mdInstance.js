@@ -10,6 +10,11 @@ export const md = new MarkdownIt({
   html: false,
   linkify: true,
   highlight: function (code, language) {
+    // 特殊处理mermaid图表
+    if (language === 'mermaid') {
+      // 生成mermaid容器，由客户端mermaid.js初始化
+      return `<div class="mermaid-container"><div class="code-block-header"><span class="code-block-header__lang">mermaid</span></div><div class="mermaid">${code}</div></div>`
+    }
     const validLang = !!(language && hljs.getLanguage(language))
     if (validLang) {
       const lang = language ?? ''

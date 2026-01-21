@@ -19,6 +19,7 @@
 </template>
 
 <script setup>
+import { onMounted, onUpdated, nextTick, ref } from 'vue'
 import ChatLoading from './ChatLoading.vue'
 import Avatar from './Avatar.vue'
 import Think from './Think.vue'
@@ -40,15 +41,59 @@ const props = defineProps({
 
 const { scrollRef, userStopped, scrollToBottom, handleScroll } = useScroll()
 
-onMounted(() => {
+// 加载mermaid库
+const loadMermaid = async () => {
+  if (typeof window !== 'undefined' && !window.mermaid) {
+    const mermaid = await import('mermaid')
+    window.mermaid = mermaid.default
+    window.mermaid.initialize({
+      startOnLoad: false,
+      theme: 'default',
+      securityLevel: 'loose',
+      flowchart: {
+        useMaxWidth: false,
+        htmlLabels: true
+      }
+    })
+  }
+}
+
+// 渲染mermaid图表
+const renderMermaidCharts = () => {
+  if (typeof window !== 'undefined' && window.mermaid) {
+    const mermaidContainers = contentRef.value?.querySelectorAll('.mermaid')
+    if (mermaidContainers) {
+      mermaidContainers.forEach(async (container) => {
+        try {
+          const code = container.textContent.trim()
+          if (code) {
+            const id = 'mermaid-' + Date.now() + '-' + Math.floor(Math.random() * 1e6)
+            const { svg } = await window.mermaid.render(id, code)
+            container.innerHTML = svg
+          }
+        } catch (error) {
+          console.error('Mermaid渲染错误:', error)
+          container.innerHTML = `<div class="mermaid-error">图表渲染失败: ${error.message}</div>`
+        }
+      })
+    }
+  }
+}
+
+onMounted(async () => {
+  await loadMermaid()
   nextTick(() => {
     scrollToBottom()
+    renderMermaidCharts()
   })
 })
 
 // 这里若是放开对话时会持续性的向下滚动
 onUpdated(() => {
   scrollToBottom()
+  nextTick(() => {
+    renderMermaidCharts()
+  })
 })
 
 const contentRef = ref(null)
