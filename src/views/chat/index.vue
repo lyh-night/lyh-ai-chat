@@ -16,7 +16,7 @@ import ChatInput from './components/ChatInput.vue'
 import ChatContent from './components/ChatContent/index.vue'
 
 import { fetchEventSource } from '@microsoft/fetch-event-source'
-import { handleChatMessage, handleThinkMessage } from './js/mdInstance.js'
+import { handleChatMessage, handleThinkMessage, parseThinkContent, incrementalRenderMarkdown } from './js/mdInstance.js'
 import 'highlight.js/styles/github.css'
 import chatApi from '@/api/model/chat.js'
 import { formatDuration } from './js/time.js'
@@ -35,11 +35,12 @@ const ChatContentRef = ref(null)
 async function createDialogue(message) {
   ChatContentRef.value && ChatContentRef.value.scrollChatStart()
   state.contentList.push({ type: 'send', message: message })
-  state.contentList.push({ type: 'receive', status: 'loading', message: '', thinking_content: '' })
+  state.contentList.push({ type: 'receive', status: 'loading', message: '', thinking_content: '', raw_message: '' })
 
   let buffer = ''
   let thinking = false
   let thinking_content = ''
+  let lastRenderedLength = 0
   const start_time = new Date().getTime()
 
   state.chatController = new AbortController()
@@ -66,6 +67,10 @@ async function createDialogue(message) {
     onmessage(event) {
       console.log('📥 收到消息:', event.data)
       if (event.data == '[DONE]') {
+        // 确保所有内容都被渲染
+        if (buffer) {
+          updateChatEndContent({ key: 'message', value: handleChatMessage(buffer) })
+        }
         updateChatEndContent({ key: 'status', value: 'finish' })
         state.loading = false
         return
@@ -73,27 +78,32 @@ async function createDialogue(message) {
       updateChatEndContent({ key: 'status', value: 'response' })
       const content = JSON.parse(event.data)
       if (content) {
-        // content中包含 <think> 时开始思考，包含 </think> 时停止思考
-        if (content.includes('<think>')) {
-          thinking = true
-        }
-        if (content.includes('</think>')) {
-          thinking = false
-        }
-        if (thinking) {
-          thinking_content = thinking_content + content
-          updateChatEndContent({ key: 'thinking_content', value: handleThinkMessage(thinking_content) })
+        buffer += content
+
+        // 使用parseThinkContent处理think标签，确保正确分离思考内容和普通内容
+        const { nonThinkContent, thinkingContent } = parseThinkContent(buffer)
+
+        if (thinkingContent) {
+          updateChatEndContent({ key: 'thinking_content', value: handleThinkMessage(thinkingContent) })
           const thinking_time = formatDuration(Math.floor((new Date().getTime() - start_time) / 1000))
           updateChatEndContent({ key: 'thinking_time', value: thinking_time })
-          return
         }
-        buffer += content
-        updateChatEndContent({ key: 'message', value: handleChatMessage(buffer) })
+
+        // 使用增量渲染功能，只渲染完整的Markdown部分
+        const { html, length } = incrementalRenderMarkdown(nonThinkContent, lastRenderedLength)
+        if (html) {
+          updateChatEndContent({ key: 'message', value: html })
+          lastRenderedLength = length
+        }
       }
     },
 
     onclose() {
       console.log('🔌 连接关闭')
+      // 确保所有内容都被渲染
+      if (buffer) {
+        updateChatEndContent({ key: 'message', value: handleChatMessage(buffer) })
+      }
       updateChatEndContent({ key: 'status', value: 'close' })
       state.loading = false
     },
