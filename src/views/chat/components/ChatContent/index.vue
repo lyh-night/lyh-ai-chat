@@ -19,7 +19,9 @@
 </template>
 
 <script setup>
-import { onMounted, onUpdated, nextTick, ref } from 'vue'
+import { onMounted, onUpdated, onUnmounted, nextTick, ref } from 'vue'
+import echarts from '@/utils/echarts-loader.js'
+import { renderMermaid } from '@/utils/mermaid-loader.js'
 import ChatLoading from './ChatLoading.vue'
 import Avatar from './Avatar.vue'
 import Think from './Think.vue'
@@ -41,58 +43,140 @@ const props = defineProps({
 
 const { scrollRef, userStopped, scrollToBottom, handleScroll } = useScroll()
 
-// 加载mermaid库
-const loadMermaid = async () => {
-  if (typeof window !== 'undefined' && !window.mermaid) {
-    const mermaid = await import('mermaid')
-    window.mermaid = mermaid.default
-    window.mermaid.initialize({
-      startOnLoad: false,
-      theme: 'default',
-      securityLevel: 'loose',
-      flowchart: {
-        useMaxWidth: false,
-        htmlLabels: true
+// 渲染mermaid图表
+const renderMermaidCharts = () => {
+  const mermaidContainers = contentRef.value?.querySelectorAll('.mermaid')
+  if (mermaidContainers) {
+    mermaidContainers.forEach(async (container) => {
+      try {
+        const code = container.textContent.trim()
+        if (code) {
+          const id = 'mermaid-' + Date.now() + '-' + Math.floor(Math.random() * 1e6)
+          const svg = await renderMermaid(id, code)
+          container.innerHTML = svg
+        }
+      } catch (error) {
+        console.error('Mermaid渲染错误:', error)
+        container.innerHTML = `<div class="mermaid-error">图表渲染失败: ${error.message}</div>`
       }
     })
   }
 }
 
-// 渲染mermaid图表
-const renderMermaidCharts = () => {
-  if (typeof window !== 'undefined' && window.mermaid) {
-    const mermaidContainers = contentRef.value?.querySelectorAll('.mermaid')
-    if (mermaidContainers) {
-      mermaidContainers.forEach(async (container) => {
-        try {
-          const code = container.textContent.trim()
-          if (code) {
-            const id = 'mermaid-' + Date.now() + '-' + Math.floor(Math.random() * 1e6)
-            const { svg } = await window.mermaid.render(id, code)
-            container.innerHTML = svg
-          }
-        } catch (error) {
-          console.error('Mermaid渲染错误:', error)
-          container.innerHTML = `<div class="mermaid-error">图表渲染失败: ${error.message}</div>`
+// 渲染echarts图表
+const renderECharts = () => {
+  const echartsContainers = contentRef.value?.querySelectorAll('.echarts-container')
+  if (echartsContainers && echartsContainers.length > 0) {
+    echartsContainers.forEach((container, index) => {
+      // 如果已经渲染过，跳过
+      if (container._chart) {
+        console.log(`Container ${index} already has a chart, skipping`)
+        return
+      }
+
+      try {
+        const chartElement = container.querySelector('.echarts-chart')
+        if (!chartElement) {
+          console.warn(`Container ${index} has no .echarts-chart element`)
+          return
         }
-      })
-    }
+
+        const configStr = container.getAttribute('data-config')
+        if (!configStr) {
+          console.warn(`Container ${index} has no data-config attribute`)
+          return
+        }
+
+        // 解析配置，处理转义字符
+        const cleanedConfigStr = configStr
+          .replace(/&quot;/g, '"')
+          .replace(/&#39;/g, "'")
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&amp;/g, '&')
+
+        const config = JSON.parse(cleanedConfigStr)
+        const chart = echarts.init(chartElement)
+
+        // 存储chart实例以便清理
+        chartElement._chart = chart
+        container._chart = chart
+
+        // 添加响应式调整大小
+        if ('ResizeObserver' in window) {
+          const resizeObserver = new ResizeObserver(() => {
+            chart.resize()
+          })
+          resizeObserver.observe(chartElement)
+          // 存储resizeObserver以便清理
+          container._resizeObserver = resizeObserver
+        } else {
+          console.warn('ResizeObserver not supported, fallback to window resize')
+        }
+
+        chart.setOption(config)
+
+        // 添加窗口resize监听作为备用
+        const handleResize = () => {
+          try {
+            chart.resize()
+          } catch (e) {
+            // 忽略调整大小时的错误
+          }
+        }
+        window.addEventListener('resize', handleResize)
+        container._resizeHandler = handleResize
+      } catch (error) {
+        console.error('ECharts渲染错误:', error)
+        const errorElement = container.querySelector('.echarts-chart')
+        if (errorElement) {
+          errorElement.innerHTML = `<div class="echarts-error" style="padding: 20px; color: #f56c6c;">图表渲染失败: ${error.message}</div>`
+        }
+      }
+    })
+  }
+}
+
+// 清理echarts图表
+const cleanupECharts = () => {
+  if (typeof window !== 'undefined' && contentRef.value) {
+    const echartsContainers = contentRef.value.querySelectorAll('.echarts-container')
+    echartsContainers.forEach((container) => {
+      const chartElement = container.querySelector('.echarts-chart')
+      if (chartElement && chartElement._chart) {
+        chartElement._chart.dispose()
+        chartElement._chart = null
+      }
+
+      // 清理resizeObserver
+      if (container._resizeObserver) {
+        container._resizeObserver.disconnect()
+        container._resizeObserver = null
+      }
+
+      // 清理resize事件监听
+      if (container._resizeHandler) {
+        window.removeEventListener('resize', container._resizeHandler)
+        container._resizeHandler = null
+      }
+    })
   }
 }
 
 onMounted(async () => {
-  await loadMermaid()
   nextTick(() => {
     scrollToBottom()
     renderMermaidCharts()
+    renderECharts()
   })
 })
 
-// 这里若是放开对话时会持续性的向下滚动
 onUpdated(() => {
+  // 这里若是放开对话时会持续性的向下滚动
   scrollToBottom()
   nextTick(() => {
     renderMermaidCharts()
+    renderECharts()
   })
 })
 
@@ -114,6 +198,10 @@ async function handleContentClick(e) {
     }
   }
 }
+
+onUnmounted(() => {
+  cleanupECharts()
+})
 
 defineExpose({ scrollChatStart })
 </script>

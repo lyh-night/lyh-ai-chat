@@ -15,6 +15,17 @@ export const md = new MarkdownIt({
       // 生成mermaid容器，由客户端mermaid.js初始化
       return `<div class="mermaid-container"><div class="code-block-header"><span class="code-block-header__lang">mermaid</span></div><div class="mermaid">${code}</div></div>`
     }
+    // 特殊处理echarts图表
+    if (language === 'echarts') {
+      // 生成echarts容器，由客户端echarts.js初始化
+      try {
+        const config = JSON.parse(code)
+        const configStr = JSON.stringify(config).replace(/"/g, '&quot;')
+        return `<div class="echarts-container" data-config="${configStr}"><div class="code-block-header"><span class="code-block-header__lang">echarts</span></div><div class="echarts-chart"></div></div>`
+      } catch (error) {
+        return `<div class="echarts-error">ECharts配置JSON解析错误: ${error.message}</div>`
+      }
+    }
     const validLang = !!(language && hljs.getLanguage(language))
     if (validLang) {
       const lang = language ?? ''
