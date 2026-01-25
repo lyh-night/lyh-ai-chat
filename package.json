@@ -24,6 +24,7 @@
     "mermaid": "^11.12.2",
     "pinia": "^2.1.7",
     "tailwindcss": "^4.1.18",
+    "uuid": "^13.0.0",
     "vue": "^3.4.21",
     "vue-demi": "^0.14.6",
     "vue-router": "^4.3.0"

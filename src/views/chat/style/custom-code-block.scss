@@ -104,3 +104,125 @@
   align-items: center;
   justify-content: center;
 }
+
+// 视频样式
+.video-container,
+.video-placeholder {
+  margin: 10px 0;
+  border: 1px solid #d7d7d7;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #f8f9fa;
+  position: relative;
+
+  video {
+    width: 100%;
+    max-width: 100%;
+    display: block;
+    border-radius: 8px;
+  }
+}
+
+.video-placeholder {
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.video-error {
+  padding: 20px;
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 10px;
+  margin: 10px 0;
+  font-family: monospace;
+  text-align: center;
+}
+
+// 音频样式
+.audio-container,
+.audio-placeholder {
+  margin: 10px 0;
+  border: 1px solid #d7d7d7;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #f8f9fa;
+  padding: 15px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.audio-placeholder {
+  min-height: 100px;
+  justify-content: center;
+}
+
+.audio-placeholder audio,
+.audio-container audio {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.audio-error {
+  padding: 20px;
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 10px;
+  margin: 10px 0;
+  font-family: monospace;
+  text-align: center;
+}
+
+// iframe样式
+.iframe-container,
+.iframe-placeholder {
+  margin: 10px 0;
+  border: 1px solid #d7d7d7;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #f8f9fa;
+  position: relative;
+  padding: 0;
+}
+
+.iframe-placeholder {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.iframe-placeholder iframe,
+.iframe-container iframe {
+  width: 100%;
+  max-width: 100%;
+  border: none;
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.iframe-error {
+  padding: 20px;
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 10px;
+  margin: 10px 0;
+  font-family: monospace;
+  text-align: center;
+}

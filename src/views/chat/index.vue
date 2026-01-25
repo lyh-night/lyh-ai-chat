@@ -38,8 +38,6 @@ async function createDialogue(message) {
   state.contentList.push({ type: 'receive', status: 'loading', message: '', thinking_content: '', raw_message: '' })
 
   let buffer = ''
-  let thinking = false
-  let thinking_content = ''
   let lastRenderedLength = 0
   const start_time = new Date().getTime()
 
@@ -67,9 +65,16 @@ async function createDialogue(message) {
     onmessage(event) {
       console.log('📥 收到消息:', event.data)
       if (event.data == '[DONE]') {
-        // 确保所有内容都被渲染
-        if (buffer) {
-          updateChatEndContent({ key: 'message', value: handleChatMessage(buffer) })
+        // 确保所有剩余内容都被渲染
+        if (buffer && lastRenderedLength < buffer.length) {
+          // 使用剩余内容进行增量渲染
+          const { html } = incrementalRenderMarkdown(buffer, lastRenderedLength)
+          if (html) {
+            updateChatEndContent({
+              key: 'message',
+              value: state.contentList[state.contentList.length - 1].message + html
+            })
+          }
         }
         updateChatEndContent({ key: 'status', value: 'finish' })
         state.loading = false

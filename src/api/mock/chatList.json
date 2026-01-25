@@ -162,6 +162,29 @@
           "inserted_at": 1753107014.766
         }
       ]
+    },
+    {
+      "id": "a11d1952-0939-48b5-9b52-13fd5a470ba8",
+      "title": "数学公式和视频数据测试",
+      "updated_at": 1749633073.416,
+      "children": [
+        {
+          "role": "USER",
+          "content": "请展示一些数学公式和视频数据",
+          "thinking_enabled": true,
+          "thinking_content": null,
+          "thinking_elapsed_secs": null,
+          "inserted_at": 1753108000.0
+        },
+        {
+          "role": "ASSISTANT",
+          "content": "## 数学公式和视频数据展示\n\n### 数学公式示例\n\n#### 基础数学公式\n1. 勾股定理：\n   $$a^2 + b^2 = c^2$$\n\n2. 二次方程求根公式：\n   $$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$$\n\n3. 欧拉公式：\n   $$e^{i\\pi} + 1 = 0$$\n\n#### 微积分公式\n1. 导数定义：\n   $$f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$$\n\n2. 牛顿-莱布尼茨公式：\n   $$\\int_{a}^{b} f(x) dx = F(b) - F(a)$$\n\n3. 泰勒展开：\n   $$f(x) = \\sum_{n=0}^{\\infty} \\frac{f^{(n)}(a)}{n!} (x-a)^n$$\n\n#### 矩阵运算\n1. 矩阵乘法：\n   $$C = AB$$\n   其中 $C_{ij} = \\sum_{k=1}^{n} A_{ik} B_{kj}$\n\n2. 特征值方程：\n   $$Ax = \\lambda x$$\n\n### 视频数据示例\n\n#### 在线视频嵌入\n使用video代码块安全嵌入视频：\n\n```video\n{\n  \"src\": \"https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4\",\n  \"width\": 640,\n  \"height\": 360,\n  \"controls\": true\n}\n```\n\n#### YouTube视频嵌入\n使用iframe代码块安全嵌入YouTube视频：\n\n```iframe\n{\n  \"src\": \"https://www.youtube.com/embed/dQw4w9WgXcQ\",\n  \"width\": 560,\n  \"height\": 315,\n  \"title\": \"YouTube视频示例\",\n  \"frameborder\": 0,\n  \"allow\": \"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\",\n  \"allowfullscreen\": true\n}\n```\n\n#### 音频示例\n使用audio代码块安全嵌入音频：\n\n```audio\n{\n  \"src\": \"https://sample-videos.com/audio/mp3/crowd-cheering.mp3\",\n  \"controls\": true\n}\n```\n\n### 混合资源示例\n\n#### 公式与图表结合\n$$F = ma$$\n\n这个公式表示牛顿第二定律，其中：\n- $F$ 是作用力（单位：牛顿）\n- $m$ 是质量（单位：千克）\n- $a$ 是加速度（单位：米/秒²）\n\n我们可以用ECharts展示力与加速度的关系：\n\n```echarts\n{\n  \"title\": {\n    \"text\": \"力与加速度关系图（质量=5kg）\",\n    \"left\": \"center\"\n  },\n  \"xAxis\": {\n    \"type\": \"category\",\n    \"name\": \"加速度（m/s²）\",\n    \"data\": [1, 2, 3, 4, 5]\n  },\n  \"yAxis\": {\n    \"type\": \"value\",\n    \"name\": \"力（N）\"\n  },\n  \"series\": [\n    {\n      \"name\": \"力\",\n      \"type\": \"line\",\n      \"data\": [5, 10, 15, 20, 25],\n      \"lineStyle\": {\n        \"color\": \"#ff6b6b\",\n        \"width\": 3\n      },\n      \"itemStyle\": {\n        \"color\": \"#ff6b6b\"\n      }\n    }\n  ]\n}\n```\n\n### 总结\n\n数学公式和视频数据是现代Web应用中常见的资源类型：\n\n1. **数学公式**：使用LaTeX语法，通过MathJax或KaTeX渲染\n2. **视频数据**：使用安全的代码块格式，支持多种视频源\n3. **音频数据**：使用安全的代码块格式，支持音频播放\n4. **混合资源**：可以结合多种资源类型，增强内容表现力\n\n这些资源类型的支持可以大大丰富AI对话的内容展示能力，提供更直观、生动的信息呈现方式。",
+          "thinking_enabled": true,
+          "thinking_content": "用户请求展示数学公式和视频数据。我需要创建一个包含多种数学公式和不同类型视频嵌入的响应。\n\n数学公式方面，我将包含基础数学、微积分和矩阵运算的公式，使用LaTeX语法，适合MathJax或KaTeX渲染。\n\n视频数据方面，我将包含：\n1. HTML5 video标签嵌入本地视频\n2. YouTube iframe嵌入在线视频\n3. HTML5 audio标签嵌入音频\n\n此外，我还将展示公式与图表的结合，使用ECharts生成力与加速度的关系图，结合牛顿第二定律公式。\n\n最后，提供关于这些资源类型的总结和使用建议。",
+          "thinking_elapsed_secs": 55,
+          "inserted_at": 1753108055.0
+        }
+      ]
     }
   ]
 }
