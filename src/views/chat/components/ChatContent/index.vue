@@ -25,8 +25,8 @@ import Avatar from './Avatar.vue'
 import Think from './Think.vue'
 
 import 'github-markdown-css/github-markdown.css'
-import { useScroll } from '../../js/useScroll.js'
-import { useClipboard } from '../../js/useCopy.js'
+import { useScroll } from '@/hooks/useScroll.js'
+import { useClipboard } from '@/hooks/useCopy.js'
 import {
   renderVideo,
   renderAudio,

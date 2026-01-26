@@ -19,7 +19,7 @@ import { fetchEventSource } from '@microsoft/fetch-event-source'
 import { handleChatMessage, handleThinkMessage, parseThinkContent, incrementalRenderMarkdown } from './js/mdInstance.js'
 import 'highlight.js/styles/github.css'
 import chatApi from '@/api/model/chat.js'
-import { formatDuration } from './js/time.js'
+import { formatDuration } from '@/utils/time.js'
 
 const baseUrl = import.meta.env.VITE_APP_BASE_API
 
