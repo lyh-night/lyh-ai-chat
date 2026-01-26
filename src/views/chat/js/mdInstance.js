@@ -35,7 +35,7 @@ function resourcePlugin(md) {
           case 'echarts':
             const config = JSON.parse(code)
             const configStr = JSON.stringify(config).replace(/"/g, '&quot;')
-            html = `<div class="echarts-container" data-config="${configStr}"><div class="code-block-header"><span class="code-block-header__lang">echarts</span></div><div class="echarts-chart"></div></div>`
+            html = `<div class="echarts-container"><div class="code-block-header"><span class="code-block-header__lang">echarts</span></div><div class="echarts-chart" data-config="${configStr}"></div></div>`
             break
 
           case 'video':
