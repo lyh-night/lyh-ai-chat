@@ -20,6 +20,7 @@
     "element-plus": "^2.7.2",
     "github-markdown-css": "^5.8.1",
     "highlight.js": "^11.11.1",
+    "katex": "^0.16.28",
     "markdown-it": "^14.1.0",
     "mermaid": "^11.12.2",
     "pinia": "^2.1.7",

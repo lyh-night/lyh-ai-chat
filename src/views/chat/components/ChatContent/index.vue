@@ -3,7 +3,7 @@
     <div ref="contentRef" class="talk-content" @click="handleContentClick">
       <div v-for="(item, i) in props.contentList" :key="i">
         <!-- 问题 -->
-        <avatar v-if="item.type == 'send'" :data="item" />
+        <Avatar v-if="item.type == 'send'" :data="item" />
         <!-- 回答 -->
         <div v-if="item.type == 'receive'" class="answer-body">
           <!-- 加载中 -->
